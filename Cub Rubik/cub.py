@@ -68,12 +68,18 @@ def message(m):
 
 mm='\n'
 def message2(m):
+    global nr_mutari
     global mm
     global message_label
     if message_label:
         destroy()
     if m:
-        mm+=m
+        if nr_mutari>=34:
+            mm+="\n"
+            nr_mutari=0
+            mm+=m
+        else:
+            mm+=m
         message_label = tk.Label(faces, text=mm, font=("Areal", 12))
         message_label.grid(column=0, columnspan=11)
 
@@ -106,7 +112,7 @@ def verify_cub_complet():
     global inter_cub
     global colt_complet
     global inter_complet
-
+    global nr_mutari
     transform_id_in_pieces(id_complet)
     colt_complet=colt
     inter_complet=inter
@@ -139,10 +145,11 @@ def verify_cub_complet():
             return 
     if verify():
         return 
+    nr_mutari=0
     message2("Partea 1. Steaua albă: \n")
     for i in range(3):
         steaua_alba()
-    
+    nr_mutari=0
     print('\n\n')
     message2("\n\nPartea 2. Colțurile albe: \n")
 
@@ -150,31 +157,36 @@ def verify_cub_complet():
         colturi_alb()
     
     print('\n\n')
-
+    nr_mutari=0
     message2("\n\nPartea 3. Layer 2: \n")
     for i in range(8):
         layer2()
         print('\n')
+    nr_mutari=0
     message2("\n\nPartea 4. Steaua galbenă: \n")
     f_galbena()
     
     print('\n')
+    nr_mutari=0
     message2("\n\nPartea 5. Partea galbenă completă: \n")
     f_galbena_pt2()
     f_galbena_pt2()
     f_galbena_pt2()
+    nr_mutari=0
     message2("\n\nPartea 6. Rearanjare : \n")
     print('\n')
     layer3()
+    nr_mutari=0
     message2("\n\nPartea 7. Algoritm Final : \n")
     print('\n')
     final()
     print('\n')
+    message2('\n')
     print(id)
     
-
-
 def buton_send_func():
+    global nr_mutari
+    nr_mutari=0
     global buton_retry
     global mm
     mm='\n'
@@ -200,6 +212,8 @@ def destroy():
     
 def buton_reset_func():
     global mm
+    global nr_mutari
+    nr_mutari=0
     mm='\n'
     global buton_retry
     buton_retry.config(bg='white')
@@ -401,6 +415,7 @@ f_count = False
 f_count1 = False
 u_count = False
 u_count1 = False
+nr_mutari=0
 
 def F(face):
     global id
@@ -412,7 +427,7 @@ def F(face):
     global inter_cub
     global inter_cub_copy
     global colt_cub_copy
-
+    global nr_mutari
     id1[face][0][2]=local_id[face][0][0]
     id1[face][2][2]=local_id[face][0][2]
     id1[face][2][0]=local_id[face][2][2]
@@ -431,9 +446,11 @@ def F(face):
             message2("F' ")
             f_count = False
             f_count1=False
+            nr_mutari+=1
         elif f_count == False:
             print("F",end=' ')
             message2("F ")
+            nr_mutari+=1
         id1[st][0][2]=local_id[0][0][0]
         id1[st][1][2]=local_id[0][0][1]
         id1[st][2][2]=local_id[0][0][2]
@@ -457,9 +474,11 @@ def F(face):
             message2("R' ")
             f_count = False
             f_count1=False
+            nr_mutari+=1
         elif f_count == False:
             print("R",end=' ')
             message2("R ")
+            nr_mutari+=1
 
         id1[0][0][2]=local_id[dr][2][0]
         id1[0][1][2]=local_id[dr][1][0]
@@ -484,9 +503,11 @@ def F(face):
             message2("B' ")
             f_count = False
             f_count1=False
+            nr_mutari+=1
         elif f_count == False:
             print("B",end=' ')
             message2("B ")
+            nr_mutari+=1
 
         id1[0][2][0]=local_id[dr][0][0]
         id1[0][2][1]=local_id[dr][1][0]
@@ -511,9 +532,11 @@ def F(face):
             message2("L' ")
             f_count = False
             f_count1=False
+            nr_mutari+=1
         elif f_count == False:
             print("L",end=' ')
             message2("L ")
+            nr_mutari+=1
 
         id1[0][2][0]=local_id[dr][2][0]
         id1[0][1][0]=local_id[dr][1][0]
@@ -560,14 +583,17 @@ def U():
     global inter_cub
     global inter_cub_copy
     global colt_cub_copy
+    global nr_mutari
     if u_count == True and u_count1 == True:
         print("U'",end=' ')
         message2("U' ")
         u_count = False
         u_count1=False
+        nr_mutari+=1
     elif u_count == False:
         print("U",end=' ')
         message2("U ")
+        nr_mutari+=1
 
     id1[5][0][2]=local_id[5][0][0]
     id1[5][2][2]=local_id[5][0][2]
@@ -1199,6 +1225,7 @@ def layer2():
             elif inter_cub[11]!=[3,4]:
                 F(4);U_();F_(4);U_();F_(3);U();F(3)
                 return 
+
 def f_galbena():
     global colt
     global inter
@@ -1578,7 +1605,7 @@ def buton_info_func():
         message('1.Ține cubul cu fața albă spre tine, iar cu fața albastră in sus.\n 2. Completează fetele in ordinea: alb,albastru,rosu,verde,portocaliu. \n 3. Pentru fața galbenă (în sus): ține cubul cu partea albastră spre tine\n 4.Fiecare față se completează de la stânga spre dreapta, de sus în jos\n5.Alege culoarea apăsând click stânga pe pătrațica dorită pentru a derula prin acestea,\n iar click dreapta pentru a completa pătrațica cu culoarea feții curente \n6. Apasă butonul ➡️ pentru a trimite rezolvarea,\n pe 🔁 pentru a reseta fețele, iar pe 💯 pentru a face cubul complet\n7. Dupa ce ai trimis rezolvarea, poți modifica fețele apăsând pe ⬅️\n8. Pe tot parcursul rezolvării, ține fața cu centrul albastru spre tine,\niar fața cu centrul alb in jos\n9. În caz de aveai o soluție afișată, dar ai apăsat din greșeală pe ℹ️\n apasă pe ⬅️, iar apoi pe ➡️ pentru a reveni la soluția ta, sau pe 🔁 pentru a reseta\n\nMutări:\n*cele care nu au \' se mută în sensul acelor de ceasornic relativ feței respective,\n iar cele care au \' se mută în sensul invers acelor de ceasornic relativ feței respective*\n F : front , F\' : front prim , R : right , R\' : right prim , L : Left , L\' : Left prim , B : back , B\' : back prim , U : up , U\' : up prim\n')
 
 for j in range(11):
-    b=tk.Canvas(faces,width=70,height=70,borderwidth=0,relief="solid")
+    b=tk.Canvas(faces,width=35,height=35,borderwidth=0,relief="solid")
     b.grid(row=7,column=j)
     block[7][j]=b
 
