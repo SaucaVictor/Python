@@ -6,7 +6,7 @@ faces.title('Rubik')
 colors=["white", "blue", "red", "green", "orange", "yellow"]
 
 block = [] #matrice culori
-for i in range(7):
+for i in range(8):
     r = []
     for j in range(11):
         r.append(None)
@@ -62,8 +62,8 @@ def verify():
 message_label=tk.Label()
 def message(m):
     global message_label
-    message_label = tk.Label(faces, text=m, font=("Areal", 12))
-    message_label.grid(column=0, columnspan=11, sticky=tk.W+tk.E)
+    message_label = tk.Label(faces, text='\n'+m+'\n', font=("Areal", 12))
+    message_label.grid(column=0, columnspan=11)
 
 colt=[]
 inter=[]
@@ -113,7 +113,7 @@ def verify_cub_complet():
 
     for i in range(8):
         if colt_cub[i] != colt_complet[i]:
-            message("Introduce o forma valida!")
+            message("Introduce o forma valida! Pentru a edita: ⬅️")
             return 
     for i in range(2):
         inter_complet.sort()
@@ -123,19 +123,19 @@ def verify_cub_complet():
             inter_cub[j].sort()
     for i in range(12):
         if inter_complet[i] != inter_cub[i]:
-            message("Introduce o forma valida!")
+            message("Introduce o forma valida! Pentru a edita: ⬅️")
             return 
     for i in range(3):
         steaua_alba()
     
-    print('\n')
+    print('\n\n')
 
     for i in range(3):
         colturi_alb()
     
-    print('\n')
+    print('\n\n')
     
-    for i in range(5):
+    for i in range(8):
         layer2()
         print('\n')
     f_galbena()
@@ -151,11 +151,15 @@ def verify_cub_complet():
 
     print('\n')
     final()
-
-
+    print('\n')
+    print(id)
+    
 
 
 def buton_send_func():
+    global buton_retry
+    buton_retry.config(bg='white')
+
     global incepe_rezolvarea
     incepe_rezolvarea = True
     global r_buton
@@ -171,9 +175,13 @@ def destroy():
     message_label.destroy()
     
 def buton_reset_func():
+    global buton_retry
+    buton_retry.config(bg='white')
     global incepe_rezolvarea
     global r_buton
     r_buton = False
+    if message_label:
+        destroy()
     if incepe_rezolvarea is True:
         destroy()
     incepe_rezolvarea = False
@@ -183,36 +191,37 @@ def buton_reset_func():
         for j in range(11):
             if i!=3 and j!=3 and i!=3 and j!=7:
                 if i==1 and j==1 :
-                    b=tk.Canvas(faces,width=50,height=50,bg='white',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='white',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)  
                 elif i==1 and j==5 :
-                    b=tk.Canvas(faces,width=50,height=50,bg='blue',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='blue',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)  
                 elif i==1 and j==9:
-                    b=tk.Canvas(faces,width=50,height=50,bg='red',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='red',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)  
                 elif i==5 and j==1:
-                    b=tk.Canvas(faces,width=50,height=50,bg='green',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='green',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)  
                 elif i==5 and j==5:
-                    b=tk.Canvas(faces,width=50,height=50,bg='orange',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='orange',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)  
                 elif i==5 and j==9:
-                    b=tk.Canvas(faces,width=50,height=50,bg='yellow',borderwidth=2,relief="solid")
+                    b=tk.Canvas(faces,width=70,height=70,bg='yellow',borderwidth=2,relief="solid")
                     b.grid(row=i,column=j)       
                 else:
-                    b=tk.Canvas(faces,width=50,height=50,bg='white',borderwidth=2,relief="solid",)
+                    b=tk.Canvas(faces,width=70,height=70,bg='white',borderwidth=2,relief="solid",)
                     b.grid(row=i,column=j)
                     b.bind("<Button-1>",lambda event, ii=i, jj=j : schimbare_culori(ii,jj))
                     b.bind("<Button-3>",lambda event, ii=i, jj=j : schimbare_culori2(ii,jj))
                     block[i][j]=b
             else:
-                b=tk.Canvas(faces,width=50,height=50,borderwidth=0,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,borderwidth=0,relief="solid")
                 b.grid(row=i,column=j)
                 block[i][j]=b
 
 def schimbare_culori(ii,jj):
     global incepe_rezolvarea
+    global block
     if incepe_rezolvarea is True:
         return
     ok=0
@@ -255,6 +264,7 @@ def schimbare_culori(ii,jj):
     
 def schimbare_culori2(ii,jj):
     global incepe_rezolvarea
+    global block
     if incepe_rezolvarea is True:
         return
     ok=0
@@ -291,6 +301,7 @@ def schimbare_culori2(ii,jj):
 
 def schimbare_culori3(ii,jj):
     global incepe_rezolvarea
+    global block
     if incepe_rezolvarea is True:
         return
     ok=0
@@ -332,31 +343,31 @@ for i in range(7):
     for j in range(11):
         if i!=3 and j!=3 and i!=3 and j!=7:
             if i==1 and j==1 :
-                b=tk.Canvas(faces,width=50,height=50,bg='white',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='white',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)  
             elif i==1 and j==5 :
-                b=tk.Canvas(faces,width=50,height=50,bg='blue',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='blue',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)  
             elif i==1 and j==9:
-                b=tk.Canvas(faces,width=50,height=50,bg='red',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='red',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)  
             elif i==5 and j==1:
-                b=tk.Canvas(faces,width=50,height=50,bg='green',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='green',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)  
             elif i==5 and j==5:
-                b=tk.Canvas(faces,width=50,height=50,bg='orange',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='orange',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)  
             elif i==5 and j==9:
-                b=tk.Canvas(faces,width=50,height=50,bg='yellow',borderwidth=2,relief="solid")
+                b=tk.Canvas(faces,width=70,height=70,bg='yellow',borderwidth=2,relief="solid")
                 b.grid(row=i,column=j)       
             else:
-                b=tk.Canvas(faces,width=50,height=50,bg='white',borderwidth=2,relief="solid",)
+                b=tk.Canvas(faces,width=70,height=70,bg='white',borderwidth=2,relief="solid",)
                 b.grid(row=i,column=j)
                 b.bind("<Button-1>",lambda event, ii=i, jj=j : schimbare_culori(ii,jj))
                 b.bind("<Button-3>",lambda event, ii=i, jj=j : schimbare_culori2(ii,jj))
                 block[i][j]=b
         else:
-            b=tk.Canvas(faces,width=50,height=50,borderwidth=0,relief="solid")
+            b=tk.Canvas(faces,width=70,height=70,borderwidth=0,relief="solid")
             b.grid(row=i,column=j)
             block[i][j]=b
 
@@ -395,7 +406,6 @@ def F(face):
             f_count1=False
         elif f_count == False:
             print("F",end=' ')
-
         id1[st][0][2]=local_id[0][0][0]
         id1[st][1][2]=local_id[0][0][1]
         id1[st][2][2]=local_id[0][0][2]
@@ -1143,13 +1153,16 @@ def layer2():
         if bool(5 in inter_cub[i]) == False:
             if inter_cub[8]!=[1,4]:
                 F(1);U_();F_(1);U_();F_(4);U();F(4)
+                return
             elif inter_cub[9]!=[1,2]:
                 F(2);U_();F_(2);U_();F_(1);U();F(1)
+                return 
             elif inter_cub[10]!=[3,2]:
                 F(3);U_();F_(3);U_();F_(2);U();F(2)
+                return
             elif inter_cub[11]!=[3,4]:
                 F(4);U_();F_(4);U_();F_(3);U();F(3)
-
+                return 
 def f_galbena():
     global colt
     global inter
@@ -1522,14 +1535,38 @@ def buton_complet_func():
                     if j!=7:
                         if j!=11:
                             schimbare_culori3(i,j)
-                            
-buton_send = tk.Button(faces, text="➡️",relief="solid",font="Areal",borderwidth=1,command=buton_send_func)
-buton_send.grid(column=0, columnspan=10, sticky=tk.W+tk.E)
 
-buton_complet = tk.Button(faces, text="💯",relief="solid",font="Areal",borderwidth=1,command=buton_complet_func)
-buton_complet.grid(row=7,column=9, columnspan=1, sticky=tk.W+tk.E)
+def buton_info_func():
+    if message_label:
+        destroy()
+        message('1.Ține cubul cu fața albă spre tine, iar cu fața albastră in sus.\n 2. Completează fetele in ordinea: alb,albastru,rosu,verde,portocaliu. \n 3. Pentru fața galbenă (în sus): ține cubul cu partea albastră spre tine\n 4.Fiecare față se completează de sus în jos, de la dreapta spre stanga\n5.Alege culoarea apăsând click stânga pe pătrațica dorită pentru a derula prin acestea,\n iar click dreapta pentru a completa pătrațica cu culoarea feții curente \n6. Apasă butonul ➡️ pentru a trimite rezolvarea,\n pe 🔁 pentru a reseta fețele, iar pe 💯 pentru a face cubul complet\n7. Dupa ce ai trimis rezolvarea, poți modifica fețele apăsând pe ⬅️')
 
-buton_reset = tk.Button(faces, text="🔁",relief="solid",font="Areal",borderwidth=1,command=buton_reset_func)
-buton_reset.grid(row=7,column=10, columnspan=1, sticky=tk.W+tk.E)
+for j in range(11):
+    b=tk.Canvas(faces,width=70,height=70,borderwidth=0,relief="solid")
+    b.grid(row=7,column=j)
+    block[7][j]=b
+
+def buton_retry_func():
+    global buton_retry
+    buton_retry.config(bg='lightblue')
+    global incepe_rezolvarea
+    incepe_rezolvarea = False
+    global r_buton
+    r_buton=False
+
+buton_send = tk.Button(faces, text="➡️",relief="solid",font="Areal",borderwidth=1,command=buton_send_func,activebackground='#423f3b',activeforeground='white')
+buton_send.grid(row=8,column=0, columnspan=7, sticky=tk.W+tk.E)
+
+buton_complet = tk.Button(faces, text="💯",relief="solid",font="Areal",borderwidth=1,command=buton_complet_func,activebackground='#423f3b',activeforeground='white')
+buton_complet.grid(row=8,column=9, columnspan=1, sticky=tk.W+tk.E)
+
+buton_reset = tk.Button(faces, text="🔁",relief="solid",font="Areal",borderwidth=1,command=buton_reset_func,activebackground='#423f3b',activeforeground='white')
+buton_reset.grid(row=8,column=10, columnspan=1, sticky=tk.W+tk.E)
+
+buton_info = tk.Button(faces, text="ℹ️",relief="solid",font="Areal",borderwidth=1,command=buton_info_func,activebackground='#423f3b',activeforeground='white')
+buton_info.grid(row=8,column=8, columnspan=1, sticky=tk.W+tk.E)
+
+buton_retry = tk.Button(faces, text="⬅️",relief="solid",font="Areal",borderwidth=1,command=buton_retry_func,activebackground='Lightblue',activeforeground='black')
+buton_retry.grid(row=8,column=7, columnspan=1, sticky=tk.W+tk.E)
 
 faces.mainloop()
