@@ -30,6 +30,7 @@ id5c=[[4,4,4],[4,4,4],[4,4,4]]#orange
 id6c=[[5,5,5],[5,5,5],[5,5,5]]#yellow 
 id_complet=[id1c,id2c,id3c,id4c,id5c,id6c]#id cullori cub complet
 
+id_scrambled=[]
 def reset():
     id1r=[[0,0,0],[0,0,0],[0,0,0]]#white
     id2r=[[0,0,0],[0,1,0],[0,0,0]]#blue
@@ -64,6 +65,17 @@ def message(m):
     global message_label
     message_label = tk.Label(faces, text='\n'+m+'\n', font=("Areal", 12))
     message_label.grid(column=0, columnspan=11)
+
+mm='\n'
+def message2(m):
+    global mm
+    global message_label
+    if message_label:
+        destroy()
+    if m:
+        mm+=m
+        message_label = tk.Label(faces, text=mm, font=("Areal", 12))
+        message_label.grid(column=0, columnspan=11)
 
 colt=[]
 inter=[]
@@ -125,30 +137,36 @@ def verify_cub_complet():
         if inter_complet[i] != inter_cub[i]:
             message("Introduce o forma valida! Pentru a edita: ⬅️")
             return 
+    if verify():
+        return 
+    message2("Partea 1. Steaua albă: \n")
     for i in range(3):
         steaua_alba()
     
     print('\n\n')
+    message2("\n\nPartea 2. Colțurile albe: \n")
 
     for i in range(3):
         colturi_alb()
     
     print('\n\n')
-    
+
+    message2("\n\nPartea 3. Layer 2: \n")
     for i in range(8):
         layer2()
         print('\n')
+    message2("\n\nPartea 4. Steaua galbenă: \n")
     f_galbena()
     
     print('\n')
-    
+    message2("\n\nPartea 5. Partea galbenă completă: \n")
     f_galbena_pt2()
     f_galbena_pt2()
     f_galbena_pt2()
-    
+    message2("\n\nPartea 6. Rearanjare : \n")
     print('\n')
     layer3()
-
+    message2("\n\nPartea 7. Algoritm Final : \n")
     print('\n')
     final()
     print('\n')
@@ -158,6 +176,8 @@ def verify_cub_complet():
 
 def buton_send_func():
     global buton_retry
+    global mm
+    mm='\n'
     buton_retry.config(bg='white')
 
     global incepe_rezolvarea
@@ -168,13 +188,19 @@ def buton_send_func():
     if message_label:
         destroy()
     verify()
+    global id
+    global id_scrambled
+    id_scrambled=deepcopy(id)
     verify_cub_complet()
     r_buton = True
+    id=deepcopy(id_scrambled)
 
 def destroy():
     message_label.destroy()
     
 def buton_reset_func():
+    global mm
+    mm='\n'
     global buton_retry
     buton_retry.config(bg='white')
     global incepe_rezolvarea
@@ -402,10 +428,12 @@ def F(face):
         dr=2
         if f_count == True and f_count1 == True:
             print("F'",end=' ')
+            message2("F' ")
             f_count = False
             f_count1=False
         elif f_count == False:
             print("F",end=' ')
+            message2("F ")
         id1[st][0][2]=local_id[0][0][0]
         id1[st][1][2]=local_id[0][0][1]
         id1[st][2][2]=local_id[0][0][2]
@@ -426,10 +454,12 @@ def F(face):
         dr=3
         if f_count == True and f_count1 == True:
             print("R'",end=' ')
+            message2("R' ")
             f_count = False
             f_count1=False
         elif f_count == False:
             print("R",end=' ')
+            message2("R ")
 
         id1[0][0][2]=local_id[dr][2][0]
         id1[0][1][2]=local_id[dr][1][0]
@@ -451,10 +481,12 @@ def F(face):
         dr=4
         if f_count == True and f_count1 == True:
             print("B'",end=' ')
+            message2("B' ")
             f_count = False
             f_count1=False
         elif f_count == False:
             print("B",end=' ')
+            message2("B ")
 
         id1[0][2][0]=local_id[dr][0][0]
         id1[0][2][1]=local_id[dr][1][0]
@@ -476,10 +508,12 @@ def F(face):
         dr=1
         if f_count == True and f_count1 == True:
             print("L'",end=' ')
+            message2("L' ")
             f_count = False
             f_count1=False
         elif f_count == False:
             print("L",end=' ')
+            message2("L ")
 
         id1[0][2][0]=local_id[dr][2][0]
         id1[0][1][0]=local_id[dr][1][0]
@@ -528,10 +562,12 @@ def U():
     global colt_cub_copy
     if u_count == True and u_count1 == True:
         print("U'",end=' ')
+        message2("U' ")
         u_count = False
         u_count1=False
     elif u_count == False:
         print("U",end=' ')
+        message2("U ")
 
     id1[5][0][2]=local_id[5][0][0]
     id1[5][2][2]=local_id[5][0][2]
