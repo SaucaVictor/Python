@@ -169,9 +169,8 @@ def verify_cub_complet():
     print('\n')
     nr_mutari=0
     message2("\n\nPartea 5. Partea galbenă completă: \n")
-    f_galbena_pt2()
-    f_galbena_pt2()
-    f_galbena_pt2()
+    while id[5]!=id_complet[5]:
+        f_galbena_pt2()
     nr_mutari=0
     message2("\n\nPartea 6. Rearanjare : \n")
     print('\n')
@@ -1319,7 +1318,7 @@ def f_galbena_pt2():
     elif (id[5][0][0]==5 and id[5][2][2]==5 and id[1][0][0]==5):#algo5pt4
         U_();F(2);F_(3);F_(2);F(1);F(2);F(3);F_(2);F_(1)    
     elif id[5]!=id_complet[5]:
-         F(1);F(2);F_(3);F_(2);F_(1);F(2);F(3);F_(2) #algoexit
+         U();F(1);F(2);F_(3);F_(2);F_(1);F(2);F(3);F_(2) #algoexit
 
 def layer3():
     global colt
