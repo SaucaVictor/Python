@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 #bot token and username
-token = '6700931943:AAHyiGXVikqMLk5b1zv6ldvNKE0hONLVop0'
+token = '<api_example>'
 bot_username = '@ytuploaderdestroyerbot'
 
 #bot start command 
