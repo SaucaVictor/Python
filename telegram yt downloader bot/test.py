@@ -2,7 +2,6 @@ import os
 import subprocess
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from pytube import YouTube
 
 # bot token and username
 token = 'api_token'
@@ -37,34 +36,38 @@ async def response(text1: str):
 
         if 'mp4' in text1:
             video_url = text
-            output_directory = "./downloads"
+            output_directory = "./downloads/"
             url = video_url
             output_path = output_directory
             try:
-                yt = YouTube(url)
-                stream = yt.streams.get_highest_resolution()
-                if stream:
-                    print("Downloading:", yt.title)
-                    stream.download(output_path)
-                    print("Download complete!")
+                result = subprocess.run([
+                    "yt-dlp",
+                    "--format", "mp4",
+                    "--output", os.path.join(output_path, "%(title)s.%(ext)s"),
+                    url
+                ], capture_output=True, text=True)
+                
+                if result.returncode != 0:
+                    print("Error:", result.stderr)
+                    return 'error X('
+                
+                print("Download complete!")
+                folder_path = "downloads"
 
-                    folder_path = "downloads"
-
-                    def get_freshest_file(folder_path):
-                        files = os.listdir(folder_path)
-                        files = [os.path.join(folder_path, file) for file in files if os.path.isfile(os.path.join(folder_path, file))]
-                        files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-                        if files:
-                            return os.path.basename(files[0]) 
-                        else:
-                            return None 
-                    freshest_file = get_freshest_file(folder_path)
-                    if freshest_file:
-                        title_path = freshest_file[:len(freshest_file)-4]
-                else:
-                    print("No MP4 stream available for this video.")
+                def get_freshest_file(folder_path):
+                    files = os.listdir(folder_path)
+                    files = [os.path.join(folder_path, file) for file in files if os.path.isfile(os.path.join(folder_path, file))]
+                    files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+                    if files:
+                        return os.path.basename(files[0]) 
+                    else:
+                        return None 
+                freshest_file = get_freshest_file(folder_path)
+                if freshest_file:
+                    title_path = freshest_file[:len(freshest_file)-4]
             except Exception as e:
                 print("Error:", e)
+                return 'error X('
         elif 'mp3' in text1:
             video_url = text
             output_directory = "./downloads/"
