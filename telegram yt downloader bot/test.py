@@ -2,27 +2,29 @@ import os
 import subprocess
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from pytube import YouTube
 
-#bot token and username
-token = '<api_example>'
+# bot token and username
+token = 'api_token'
 bot_username = '@ytuploaderdestroyerbot'
 
-#bot start command 
+# bot start command
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Message format: <link> mp3/mp4')
 
-#bot response
+# bot response
 async def response(text1: str):
+    global title_path, title_path2
+    title_path = ""
+    title_path2 = ""
+
     if 'hello' in text1.lower():
         return 'hi there'
     elif 'youtu' in text1.lower():
-        global title_path
-        title_path = 0
-        global title_path2
-        title_path2 = 0
         text1 = text1.split(' ')
-        [text := i for i in text1 if 'https' in i]
-        clean=True
+        text = next((i for i in text1 if 'https' in i), None)
+
+        clean = True
         if clean:
             folder_path = "downloads"
             files = os.listdir(folder_path)
@@ -30,15 +32,14 @@ async def response(text1: str):
                 file_path = os.path.join(folder_path, file)
                 os.remove(file_path)
 
-        if '&list' in text:
-            text=text.split('&list')
-            text=text[0]
+        if text and '&list' in text:
+            text = text.split('&list')[0]
+
         if 'mp4' in text1:
-            from pytube import YouTube
-            video_url = text 
+            video_url = text
             output_directory = "./downloads"
-            url=video_url
-            output_path=output_directory
+            url = video_url
+            output_path = output_directory
             try:
                 yt = YouTube(url)
                 stream = yt.streams.get_highest_resolution()
@@ -48,6 +49,7 @@ async def response(text1: str):
                     print("Download complete!")
 
                     folder_path = "downloads"
+
                     def get_freshest_file(folder_path):
                         files = os.listdir(folder_path)
                         files = [os.path.join(folder_path, file) for file in files if os.path.isfile(os.path.join(folder_path, file))]
@@ -58,7 +60,7 @@ async def response(text1: str):
                             return None 
                     freshest_file = get_freshest_file(folder_path)
                     if freshest_file:
-                        title_path=freshest_file[:len(freshest_file)-4]
+                        title_path = freshest_file[:len(freshest_file)-4]
                 else:
                     print("No MP4 stream available for this video.")
             except Exception as e:
@@ -69,9 +71,21 @@ async def response(text1: str):
             url = video_url
             output_path = output_directory
             try:
-                subprocess.run(["yt-dlp", "--cookies","--cookies-from-browser", "--extract-audio", "--audio-format", "mp3", "--output", output_path + "/%(title)s.%(ext)s", url], check=True)
+                result = subprocess.run([
+                    "yt-dlp",
+                    "--extract-audio",
+                    "--audio-format", "mp3",
+                    "--output", os.path.join(output_path, "%(title)s.%(ext)s"),
+                    url
+                ], capture_output=True, text=True)
+                
+                if result.returncode != 0:
+                    print("Error:", result.stderr)
+                    return 'error X('
+                
                 print("Download complete!")
                 folder_path = "downloads"
+
                 def get_freshest_file(folder_path):
                     files = os.listdir(folder_path)
                     files = [os.path.join(folder_path, file) for file in files if os.path.isfile(os.path.join(folder_path, file))]
@@ -82,9 +96,10 @@ async def response(text1: str):
                         return None 
                 freshest_file = get_freshest_file(folder_path)
                 if freshest_file:
-                    title_path2=freshest_file[:len(freshest_file)-4]
+                    title_path2 = freshest_file[:len(freshest_file)-4]
             except Exception as e:
                 print("Error:", e)
+                return 'error X('
         else:
             return 'send valid message format'
         if title_path or title_path2:
@@ -95,6 +110,7 @@ async def response(text1: str):
         pass
     else:
         return 'idk'
+
 async def resp_back(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mess = update.message.chat.type
     text = update.message.text
@@ -111,8 +127,7 @@ async def resp_back(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if response_ == 'complete':
         chat_id = update.message.chat.id
         document_path = "./downloads/"
-        global title_path
-        global title_path2
+        global title_path, title_path2
         if title_path:
             document_filename = f"{title_path}.mp4"
             await context.bot.send_document(chat_id=chat_id, document=open(document_path + document_filename, 'rb'))
